@@ -1,3 +1,5 @@
+
+//user and password
 function handleLogin() {
     const user = document.getElementById('username').value;
     const pass = document.getElementById('password').value;
@@ -8,6 +10,9 @@ function handleLogin() {
         fetchIssues();
     } 
     else {
-        alert("Invalid credentials!");
+        alert("Invalid");
     }
 }
+
+
+

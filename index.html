@@ -60,19 +60,24 @@
     </section>
 
     <section id="main-page" class="hidden">
-        <nav class="bg-white shadow p-4 flex justify-between items-center">
-            <div class="font-bold text-xl">IssueTracker</div>
-            <div class="flex gap-2">
-                <input id="search-input" type="text" placeholder="Search issues..." class="border p-2 rounded">
-                <button onclick="handleSearch()" class="bg-black text-white px-4 py-2 rounded">Search</button>
+        <nav class="bg-[#FFFFFF] shadow py-4 flex justify-between items-center px-20">
+            <div class="font-bold text-xl flex gap-1 justify-center items-center">
+                <img class="w-9" src="./assets/github-logo.png" alt="">
+                <p class="text-2xl">
+                    GitHub Issues Tracker 
+                </p>
+            </div>
+            <div class="flex gap-4">
+                <input id="search-input" type="text" placeholder="Search issues..." class="border border-[#E4E4E7] p-2 rounded text-[#64748B]">
+                <button onclick="handleSearch()" class="bg-[#4A00FF] text-[#FFFFFF] px-4 py-2.5 rounded">+ New Issue</button>
             </div>
         </nav>
 
         <div class="container mx-auto mt-8 p-4">
-            <div class="flex gap-4 mb-6 border-b pb-2">
-                <button onclick="filterIssues('all')" class="tab-btn font-bold border-b-2 border-blue-500">All</button>
-                <button onclick="filterIssues('open')" class="tab-btn">Open</button>
-                <button onclick="filterIssues('closed')" class="tab-btn">Closed</button>
+            <div class="flex gap-4 mb-6 border-none shadow-md rounded-lg bg-[#FFFFFF] p-6">
+                <button onclick="filterIssues('all')" class="tab-btn font-semibold bg-[#4A00FF] text-[#FFFFFF] border-none px-12 py-3 rounded-sm">All</button>
+                <button onclick="filterIssues('open')" class="tab-btn font-semibold bg-[#FFFFFF] text-[#64748B] border-[#E4E4E7] border px-9 py-3 rounded-sm"> Open </button>
+                <button onclick="filterIssues('closed')" class="tab-btn font-semibold bg-[#FFFFFF] text-[#64748B] border-[#E4E4E7] border px-8 py-3 rounded-sm">Closed</button>
             </div>
 
             <div id="loader" class="hidden text-center py-10 font-bold">Loading...</div>
