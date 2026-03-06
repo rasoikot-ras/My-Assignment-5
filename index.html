@@ -27,8 +27,61 @@
     </style>
 
 </head>
-<body>
-    
+<body  class="body-set bg-[#F8FAFC]">
+    <section id="login-page" class="flex flex-col items-center justify-center container mx-auto min-h-screen">
+        <div class="bg-[#FFFFFF] p-8 rounded-lg shadow-lg text-center">
+            <div class="pt-8 flex items-center justify-center">
+                <img src="./assets/github-logo.png" alt="">
+            </div>
+            <h1 class="text-2xl font-semibold mb-2 mt-6 text[#1F2937]">GitHub Issues Tracker</h1>
+            <p class="text-[#64748B] text-base mb-6">Sign in to manage your issues</p>
+            <p class="text-left mb-2 text-[#1F2937] text-base">Username</p>
+            <input id="username" type="text" placeholder="Enter Username" class="w-full border p-2 mb-4 rounded-lg border-[#E4E4E7]">
+            <p class="text-left mb-2 text-[#1F2937] text-base">Password</p>
+            <input id="password" type="password" placeholder="Enter Password" class="w-full border p-2 mb-6 rounded-lg border-[#E4E4E7]">
+            <button onclick="handleLogin()" class="w-full bg-[#4A00FF] text-white p-2 rounded hover:bg-green-400 mb-6">Sign In</button>
+            <div class="flex items-center mb-6">
+                <div class="flex-grow border-t border-[#E4E4E7]"></div>
+                <span class="px-2.5 text-[1F2937] text-base">OR</span>
+                <div class="flex-grow border-t border-[#E4E4E7]"></div>
+            </div>
+            <p class="text-sm text-[#64748B] mb-2">
+                Demo Credentials:
+            </p>
+            <div class="py-6 text-base text-center bg-[#F8FAFC] p-2 border-none">
+                <p>
+                    <span class="font-semibold">Username:</span> admin
+                </p>
+                <p>
+                    <span class="font-semibold">Password:</span> admin123
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="main-page" class="hidden">
+        <nav class="bg-white shadow p-4 flex justify-between items-center">
+            <div class="font-bold text-xl">IssueTracker</div>
+            <div class="flex gap-2">
+                <input id="search-input" type="text" placeholder="Search issues..." class="border p-2 rounded">
+                <button onclick="handleSearch()" class="bg-black text-white px-4 py-2 rounded">Search</button>
+            </div>
+        </nav>
+
+        <div class="container mx-auto mt-8 p-4">
+            <div class="flex gap-4 mb-6 border-b pb-2">
+                <button onclick="filterIssues('all')" class="tab-btn font-bold border-b-2 border-blue-500">All</button>
+                <button onclick="filterIssues('open')" class="tab-btn">Open</button>
+                <button onclick="filterIssues('closed')" class="tab-btn">Closed</button>
+            </div>
+
+            <div id="loader" class="hidden text-center py-10 font-bold">Loading...</div>
+
+            <div id="issues-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            </div>
+        </div>
+    </section>
 
 
 
