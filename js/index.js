@@ -20,7 +20,7 @@ const loadAllIssues = () => {
     fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues")
         .then(res => res.json())
         .then(data => {
-            const issues = Array.isArray(data) ? data : (data.data || []);
+            const issues = data.data || [];
             issueCountDisplay.innerText = issues.length;
             displayIssues(issues);
             manageSpinner(false);
@@ -31,12 +31,12 @@ const loadAllIssues = () => {
         });
 }
 
-
-const displayIssues = (issues) => {
+    const displayIssues = (issues) => {
     issuesContainer.innerHTML = "";
-    const dataArray = Array.isArray(issues) ? issues : [];
+    
+    if (!issues) return;
 
-    dataArray.forEach(issue => {
+    issues.forEach(issue => {
         const isOpen = issue.status.toLowerCase() === "open";
         const borderColor = isOpen ? "border-[#00A96E]" : "border-[#A855F7]";
         const statusIcon = isOpen ? "./assets/Open-Status.png" : "./assets/Closed-Status.png";
@@ -52,42 +52,40 @@ const displayIssues = (issues) => {
              priorityClass = "bg-[#F0F5FF] text-[#2F54EB]"
         }
 
-        const tagsHTML = (issue.labels || []).map(tag => {
-    let tagStyle = "";
-    let icon = "";
-    const tagName = tag.toLowerCase();
-
-    
-    if (tagName.includes('bug')) {
-        tagStyle = "bg-[#FFEDED] text-[#FF4D4F]"; 
-        icon = "fa-bug";
-    } 
-    else if (tagName.includes('help')) {
-        tagStyle = "bg-[#FFF7E6] text-[#FAAD14]"; 
-        icon = "fa-circle-info";
-    } 
-    else if (tagName.includes('enhancement')) {
-        tagStyle = "bg-[#E6FFFA] text-[#00A96E]"; 
-        icon = "fa-wand-magic-sparkles";
-    } 
-    else if (tagName.includes('documentation')) {
-        tagStyle = "bg-[#E6F7FF] text-[#1890FF]"; 
-        icon = "fa-book";
-    } 
-    else if (tagName.includes('question')) {
-        tagStyle = "bg-[#F9F0FF] text-[#722ED1]"; 
-        icon = "fa-circle-question";
-    } 
-    else {
         
-        tagStyle = "bg-gray-100 text-gray-600"; 
-        icon = "fa-tag";
-    }
+        let tagsHTML = "";
+        if (issue.labels) {
+            issue.labels.forEach(tag => {
+                let tagStyle = "bg-[#64748B] text-[#FFFFFF]";
+                let icon = "fa-tag";
+                const tagName = tag.toLowerCase();
 
-        return `<span class="${tagStyle} text-[9px] font-bold px-2 py-1 rounded flex items-center gap-1 uppercase">
-                <i class="fa-solid ${icon}"></i> ${tag}
-            </span>`;
-    }).join('');
+                if (tagName.includes('bug')) {
+                    tagStyle = "bg-[#FFEDED] text-[#FF4D4F]"; 
+                    icon = "fa-bug";
+                } 
+                else if (tagName.includes('help')) {
+                    tagStyle = "bg-[#FFF7E6] text-[#FAAD14]"; 
+                    icon = "fa-circle-info";
+                } 
+                else if (tagName.includes('enhancement')) {
+                    tagStyle = "bg-[#E6FFFA] text-[#00A96E]"; 
+                    icon = "fa-wand-magic-sparkles";
+                } 
+                else if (tagName.includes('documentation')) {
+                    tagStyle = "bg-[#E6F7FF] text-[#1890FF]"; 
+                    icon = "fa-book";
+                } 
+                else if (tagName.includes('question')) {
+                    tagStyle = "bg-[#F9F0FF] text-[#722ED1]"; 
+                    icon = "fa-circle-question";
+                }
+
+                tagsHTML += `<span class="${tagStyle} text-[9px] font-bold px-2 py-1 rounded flex items-center gap-1 uppercase">
+                                <i class="fa-solid ${icon}"></i> ${tag}
+                            </span>`;
+            });
+        }
 
         const card = document.createElement("div");
         card.className = `bg-white border-t-4 ${borderColor} p-5 rounded-lg shadow-sm flex flex-col justify-between cursor-pointer hover:shadow-md transition-all relative`;
@@ -103,8 +101,8 @@ const displayIssues = (issues) => {
                     </span>
                 </div>
 
-                <h2 class="font-bold text-gray-800 text-[16px] leading-tight mb-2">${issue.title}</h2>
-                <p class="text-[13px] text-gray-500 line-clamp-2 mb-4">${issue.description}</p>
+                <h2 class="font-bold text-[#1F2937] text-[16px] leading-tight mb-2">${issue.title}</h2>
+                <p class="text-[13px] text-[#64748B] line-clamp-2 mb-4">${issue.description}</p>
                 
                 <div class="flex gap-2 mb-4">
                     ${tagsHTML}
@@ -112,7 +110,7 @@ const displayIssues = (issues) => {
             </div>
 
             <div class="border-t border-gray-100 pt-3">
-                <div class="text-[11px] text-gray-400">
+                <div class="text-[11px] text-[#64748B]">
                     <p class="mb-1">#${issue.id} by ${issue.author}</p>
                     <p>${issue.createdAt || '1/15/2024'}</p>
                 </div>
@@ -142,28 +140,50 @@ const showModal = (issue) => {
 
     const statusBgColor = isOpen ? "bg-[#00A96E]" : "bg-[#FF4D4F]";
 
-    const statusText = issue.status.charAt(0).toUpperCase() + issue.status.slice(1);
+    const statusText = issue.status;
 
-    const tagConfig = {
-        'bug': { style: "bg-[#FFEDED] text-[#FF4D4F]", icon: "fa-bug" },
-        'help wanted': { style: "bg-[#FFF7E6] text-[#FAAD14]", icon: "fa-circle-info" },
-        'enhancement': { style: "bg-[#E6FFFA] text-[#00A96E]", icon: "fa-wand-magic-sparkles" },
-        'documentation': { style: "bg-[#E6F7FF] text-[#1890FF]", icon: "fa-book" },
-        'question': { style: "bg-[#F9F0FF] text-[#722ED1]", icon: "fa-circle-question" },
-        'default': { style: "bg-gray-100 text-gray-600", icon: "fa-tag" }
-    };
+    let tagsHTML = "";
+    if (issue.labels) {
+        issue.labels.forEach(tag => {
+            let tagStyle = " bg-[#64748B] text-[#1F2937]";
+            let icon = "fa-tag";
+            const tagName = tag.toLowerCase();
 
-    const tagsHTML = (issue.labels || []).map(tag => {
-        const config = tagConfig[tag.toLowerCase()] || tagConfig['default'];
-        return `<span class="${config.style} text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 uppercase">
-                    <i class="fa-solid ${config.icon}"></i> ${tag}
-                </span>`;
-    }).join('');
+            if (tagName.includes('bug')) {
+                tagStyle = "bg-[#FFEDED] text-[#FF4D4F]"; 
+                icon = "fa-bug";
+            } 
+            else if (tagName.includes('help')) {
+                tagStyle = "bg-[#FFF7E6] text-[#FAAD14]"; 
+                icon = "fa-circle-info";
+            } 
+            else if (tagName.includes('enhancement')) {
+                tagStyle = "bg-[#E6FFFA] text-[#00A96E]"; 
+                icon = "fa-wand-magic-sparkles";
+            } 
+            else if (tagName.includes('documentation')) {
+                tagStyle = "bg-[#E6F7FF] text-[#1890FF]"; 
+                icon = "fa-book";
+            } 
+            else if (tagName.includes('question')) {
+                tagStyle = "bg-[#F9F0FF] text-[#722ED1]"; 
+                icon = "fa-circle-question";
+            }
+
+            tagsHTML += `<span class="${tagStyle} text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 uppercase">
+                            <i class="fa-solid ${icon}"></i> ${tag}
+                        </span>`;
+        });
+    }
 
   
     let priorityBadge = "bg-[#2F54EB]";
-    if(issue.priority.toLowerCase() === 'high') priorityBadge = "bg-[#FF4D4F]";
-    else if(issue.priority.toLowerCase() === 'medium') priorityBadge = "bg-[#FAAD14]";
+    if(issue.priority.toLowerCase() === 'high'){
+         priorityBadge = "bg-[#FF4D4F]";
+    }
+    else if(issue.priority.toLowerCase() === 'medium') {
+        priorityBadge = "bg-[#FAAD14]";
+    }
 
     const modal = document.createElement('div');
     modal.id = 'issue-modal';
@@ -223,8 +243,9 @@ const filterIssues = (status, event) => {
     fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues")
         .then(res => res.json())
         .then(data => {
-            const issues = Array.isArray(data) ? data : (data.data || []);
+            const issues = data.data || [];
             const filtered = status === 'all' ? issues : issues.filter(i => i.status.toLowerCase() === status);
+            // console.log('work', filtered)
             issueCountDisplay.innerText = filtered.length;
             displayIssues(filtered);
             manageSpinner(false);
@@ -243,8 +264,8 @@ const handleSearch = () => {
     fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${text}`)
         .then(res => res.json())
         .then(data => {
-            const searchResult = Array.isArray(data) ? data : (data.data || []);
-            
+            const searchResult = data.data || [];
+            // console.log( searchResult);
             issueCountDisplay.innerText = searchResult.length;
             displayIssues(searchResult);
             manageSpinner(false);
