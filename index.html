@@ -60,16 +60,21 @@
     </section>
 
     <section id="main-page" class="hidden">
-        <nav class="bg-[#FFFFFF] shadow py-4 flex justify-between items-center px-20">
-            <div class="font-bold text-xl flex gap-1 justify-center items-center">
-                <img class="w-9" src="./assets/github-logo.png" alt="">
-                <p class="text-2xl">
+        <nav class="bg-[#FFFFFF] shadow py-4   flex flex-col md:flex-row justify-between items-center px-6 md:px-20 gap-4">
+            <div class="flex items-center gap-2 justify-center ">
+                <img class="w-8 md:w-9" src="./assets/github-logo.png" alt="">
+                <p class="text-lg md:text-2xl font-bold text-[#1F2937]">
                     GitHub Issues Tracker 
                 </p>
             </div>
-            <div class="flex gap-4">
-                <input id="searchinput" type="text" placeholder="Search issues..." class="border border-[#E4E4E7] p-2 rounded text-[#64748B]">
-                <button id="btnsearch" onclick="handleSearch()" class="bg-[#4A00FF] text-[#FFFFFF] px-4 py-2.5 rounded">+ New Issue</button>
+            <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+
+                <div class="relative w-full sm:w-64">
+                    <input id="searchinput" type="text" placeholder="Search issues..." class=" w-full pl-9 pr-4 py-2 border border-[#E4E4E7] rounded-lg text-[#64748B] focus:outline-none focus:ring-1 focus:ring-[#4A00FF]">
+                    <i class="fa-solid fa-magnifying-glass absolute left-2 top-1/2 -translate-y-1/2 text-[#64748B]"></i>
+                </div>
+
+                <button id="btnsearch" onclick="handleSearch()" class="bg-[#4A00FF] text-[#FFFFFF] px-4 py-2.5 rounded-lg font-bold text-sm hover:bg-[#3b00cc] transition-all w-full sm:w-auto whitespace-nowrap">+ New Issue</button>
             </div>
         </nav>
 
@@ -82,7 +87,7 @@
 
             <div id="loader" class="hidden text-center py-10 font-bold">Loading...</div>
 
-            <div class="flex gap-4 mb-6 border-none shadow-md rounded-lg bg-[#FFFFFF] p-6">
+            <div class="flex gap-4 mb-6 border-none shadow-md rounded-lg bg-[#FFFFFF] p-6 justify-between">
                 <div class="flex gap-4">
                     <img class="rounded-full border-12 border-[#ECE4FF]" src="./assets/Aperture.png" alt="">
                     <div>
@@ -90,8 +95,18 @@
                         <p class="text-gray-500 text-sm">Track and manage your project issues</p>
                     </div>
                 </div>
-
+                <div class="flex gap-2">
+                    <div class="flex items-center text-center gap-1">
+                        <span class="text-[#00A96E] text-5xl font-bold text-center">•</span>
+                        <p class="">Open</p>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <span class="text-[#A855F7] text-5xl font-bold text-center">•</span>
+                        <p class="">Closed</p>
+                    </div>
+                </div>
             </div>
+
             <div id="issuescontainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             </div>
         </div>
