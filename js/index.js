@@ -42,9 +42,52 @@ const displayIssues = (issues) => {
         const statusIcon = isOpen ? "./assets/Open-Status.png" : "./assets/Closed-Status.png";
         
         let priorityClass = "";
-        if(issue.priority.toLowerCase() === 'high') priorityClass = "bg-[#FFEDED] text-[#FF4D4F]";
-        else if(issue.priority.toLowerCase() === 'medium') priorityClass = "bg-[#FFF7E6] text-[#FAAD14]";
-        else priorityClass = "bg-[#F0F5FF] text-[#2F54EB]";
+        if(issue.priority.toLowerCase() === 'high'){
+             priorityClass = "bg-[#FFEDED] text-[#FF4D4F]"
+        }
+        else if(issue.priority.toLowerCase() === 'medium'){
+             priorityClass = "bg-[#FFF7E6] text-[#FAAD14]"
+        }
+        else{
+             priorityClass = "bg-[#F0F5FF] text-[#2F54EB]"
+        }
+
+        const tagsHTML = (issue.labels || []).map(tag => {
+    let tagStyle = "";
+    let icon = "";
+    const tagName = tag.toLowerCase();
+
+    
+    if (tagName.includes('bug')) {
+        tagStyle = "bg-[#FFEDED] text-[#FF4D4F]"; 
+        icon = "fa-bug";
+    } 
+    else if (tagName.includes('help')) {
+        tagStyle = "bg-[#FFF7E6] text-[#FAAD14]"; 
+        icon = "fa-circle-info";
+    } 
+    else if (tagName.includes('enhancement')) {
+        tagStyle = "bg-[#E6FFFA] text-[#00A96E]"; 
+        icon = "fa-wand-magic-sparkles";
+    } 
+    else if (tagName.includes('documentation')) {
+        tagStyle = "bg-[#E6F7FF] text-[#1890FF]"; 
+        icon = "fa-book";
+    } 
+    else if (tagName.includes('question')) {
+        tagStyle = "bg-[#F9F0FF] text-[#722ED1]"; 
+        icon = "fa-circle-question";
+    } 
+    else {
+        
+        tagStyle = "bg-gray-100 text-gray-600"; 
+        icon = "fa-tag";
+    }
+
+        return `<span class="${tagStyle} text-[9px] font-bold px-2 py-1 rounded flex items-center gap-1 uppercase">
+                <i class="fa-solid ${icon}"></i> ${tag}
+            </span>`;
+    }).join('');
 
         const card = document.createElement("div");
         card.className = `bg-white border-t-4 ${borderColor} p-5 rounded-lg shadow-sm flex flex-col justify-between cursor-pointer hover:shadow-md transition-all relative`;
@@ -64,12 +107,7 @@ const displayIssues = (issues) => {
                 <p class="text-[13px] text-gray-500 line-clamp-2 mb-4">${issue.description}</p>
                 
                 <div class="flex gap-2 mb-4">
-                    <span class="bg-[#FFEDED] text-[#FF4D4F] text-[9px] font-bold px-2 py-1 rounded flex items-center gap-1">
-                        <i class="fa-solid fa-bug"></i> BUG
-                    </span>
-                    <span class="bg-[#FFF7E6] text-[#FAAD14] text-[9px] font-bold px-2 py-1 rounded flex items-center gap-1">
-                        <i class="fa-solid fa-circle-info"></i> HELP WANTED
-                    </span>
+                    ${tagsHTML}
                 </div>
             </div>
 
@@ -96,43 +134,73 @@ const loadSingleIssue = (id) => {
 
 
 const showModal = (issue) => {
-    
     const oldModal = document.getElementById('issue-modal');
     if (oldModal) oldModal.remove();
 
+    const statusLower = issue.status.toLowerCase();
+    const isOpen = statusLower === "open";
+
+    const statusBgColor = isOpen ? "bg-[#00A96E]" : "bg-[#FF4D4F]";
+
+    const statusText = issue.status.charAt(0).toUpperCase() + issue.status.slice(1);
+
+    const tagConfig = {
+        'bug': { style: "bg-[#FFEDED] text-[#FF4D4F]", icon: "fa-bug" },
+        'help wanted': { style: "bg-[#FFF7E6] text-[#FAAD14]", icon: "fa-circle-info" },
+        'enhancement': { style: "bg-[#E6FFFA] text-[#00A96E]", icon: "fa-wand-magic-sparkles" },
+        'documentation': { style: "bg-[#E6F7FF] text-[#1890FF]", icon: "fa-book" },
+        'question': { style: "bg-[#F9F0FF] text-[#722ED1]", icon: "fa-circle-question" },
+        'default': { style: "bg-gray-100 text-gray-600", icon: "fa-tag" }
+    };
+
+    const tagsHTML = (issue.labels || []).map(tag => {
+        const config = tagConfig[tag.toLowerCase()] || tagConfig['default'];
+        return `<span class="${config.style} text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 uppercase">
+                    <i class="fa-solid ${config.icon}"></i> ${tag}
+                </span>`;
+    }).join('');
+
+  
+    let priorityBadge = "bg-[#2F54EB]";
+    if(issue.priority.toLowerCase() === 'high') priorityBadge = "bg-[#FF4D4F]";
+    else if(issue.priority.toLowerCase() === 'medium') priorityBadge = "bg-[#FAAD14]";
+
     const modal = document.createElement('div');
     modal.id = 'issue-modal';
-    modal.className = 'fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 backdrop-blur-sm';
+    modal.className = 'fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 backdrop-blur-sm overflow-y-auto';
     
     modal.innerHTML = `
-        <div class="bg-white rounded-xl w-full max-w-xl md:p-8 shadow-2xl relative my-auto">
-            <h2 class="text-lg md:text-2xl font-bold text-[#1F2937] mb-2 leading-tight">${issue.title}</h2>
+        <div class="bg-white rounded-xl w-full max-w-xl p-6 md:p-8 shadow-2xl relative my-auto animate-fade-in">
+            <h2 class="text-xl md:text-2xl font-bold text-[#1F2937] mb-2 leading-tight">${issue.title}</h2>
             
-            <div class="flex flex-wrap items-center gap-2 mb-4 text-[12px] md:text-[13px]">
-                <span class="bg-[#00A96E] text-white px-3 py-0.5 rounded-full text-[10px] font-bold uppercase">${issue.status}</span>
-                <span class="text-[#64748B] text-[11px] md:text-[13px]">• Opened by ${issue.author} • 22/02/2026</span>
+            <div class="flex flex-wrap items-center gap-2 mb-4">
+                <span class="${statusBgColor} text-white px-3 py-0.5 rounded-full text-[10px] font-bold uppercase">
+                    ${statusText}
+                </span>
+                <span class="text-[#64748B] text-[11px] md:text-[13px]">• Opened by ${issue.author} • ${issue.createdAt || '22/02/2026'}</span>
             </div>
             
-            <div class="flex gap-2 mb-4">
-                <span class="bg-[#FFEDED] text-[#FF4D4F] text-[9px] md:text-[10px] font-bold px-2 py-1 rounded"><i class="fa-solid fa-bug"></i> BUG</span>
-                <span class="bg-[#FFF7E6] text-[#FAAD14] text-[9px] md:text-[10px] font-bold px-2 py-1 rounded"><i class="fa-solid fa-circle-info"></i> HELP WANTED</span>
+            <div class="flex flex-wrap gap-2 mb-6">
+                ${tagsHTML}
             </div>
 
-            <p class="text-[#64748B] text-xs md:text-sm mb-6 leading-relaxed">${issue.description}</p>
+            <p class="text-[#64748B] text-sm mb-8 leading-relaxed">${issue.description}</p>
 
-            <div class="bg-[#F8FAFC] rounded-lg p-4 md:p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+            <div class="bg-[#F8FAFC] rounded-lg p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <div>
                     <p class="text-[10px] text-[#64748B] mb-1 font-medium">Assignee:</p>
-                    <p class="font-bold text-[#1F2937] text-sm md:text-base">${issue.author}</p>
+                    <p class="font-bold text-[#1F2937] text-base">${issue.author}</p>
                 </div>
-                <div class="text-right">
+                <div class="sm:text-right">
                     <p class="text-[11px] text-[#64748B] mb-1 font-medium">Priority:</p>
-                    <span class="bg-[#FF4D4F] text-white px-4 py-1 rounded-full text-[10px] font-bold uppercase">${issue.priority}</span>
+                    <span class="${priorityBadge} text-white px-4 py-1 rounded-full text-[10px] font-bold uppercase">
+                        ${issue.priority}
+                    </span>
                 </div>
             </div>
 
             <div class="flex justify-end">
-                <button onclick="this.closest('#issue-modal').remove()" class="bg-[#4A00FF] text-white px-8 py-2.5 rounded-lg text-sm font-bold hover:bg-[#3b00cc] transition-colors">Close</button>
+                <button onclick="this.closest('#issue-modal').remove()" class="w-full sm:w-auto bg-[#4A00FF] text-white px-8 py-2.5 rounded-lg text-sm font-bold hover:bg-[#3b00cc] transition-all active:scale-95">Close</button>
             </div>
         </div>
     `;
