@@ -68,8 +68,8 @@
                 </p>
             </div>
             <div class="flex gap-4">
-                <input id="search-input" type="text" placeholder="Search issues..." class="border border-[#E4E4E7] p-2 rounded text-[#64748B]">
-                <button onclick="handleSearch()" class="bg-[#4A00FF] text-[#FFFFFF] px-4 py-2.5 rounded">+ New Issue</button>
+                <input id="searchinput" type="text" placeholder="Search issues..." class="border border-[#E4E4E7] p-2 rounded text-[#64748B]">
+                <button id="btnsearch" onclick="handleSearch()" class="bg-[#4A00FF] text-[#FFFFFF] px-4 py-2.5 rounded">+ New Issue</button>
             </div>
         </nav>
 
@@ -82,8 +82,17 @@
 
             <div id="loader" class="hidden text-center py-10 font-bold">Loading...</div>
 
-            <div id="issues-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-            
+            <div class="flex gap-4 mb-6 border-none shadow-md rounded-lg bg-[#FFFFFF] p-6">
+                <div class="flex gap-4">
+                    <img class="rounded-full border-12 border-[#ECE4FF]" src="./assets/Aperture.png" alt="">
+                    <div>
+                        <h2 class="text-xl font-bold"><span id="issue-count">0</span> Issues</h2>
+                        <p class="text-gray-500 text-sm">Track and manage your project issues</p>
+                    </div>
+                </div>
+
+            </div>
+            <div id="issuescontainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             </div>
         </div>
     </section>
