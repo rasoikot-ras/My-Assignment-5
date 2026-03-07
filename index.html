@@ -80,22 +80,22 @@
 
         <div class="container mx-auto mt-8 p-4">
             <div class="flex gap-4 mb-6 border-none shadow-md rounded-lg bg-[#FFFFFF] p-6">
-                <button onclick="filterIssues('all', event)" class="tab-btn font-semibold bg-[#4A00FF] text-[#FFFFFF] border-none px-12 py-3 rounded-sm">All</button>
-                <button onclick="filterIssues('open', event)" class="tab-btn font-semibold bg-[#FFFFFF] text-[#64748B] border-[#E4E4E7] border px-9 py-3 rounded-sm"> Open </button>
-                <button onclick="filterIssues('closed', event)" class="tab-btn font-semibold bg-[#FFFFFF] text-[#64748B] border-[#E4E4E7] border px-8 py-3 rounded-sm">Closed</button>
+                <button onclick="filterIssues('all', event)" class="tab-btn font-semibold bg-[#4A00FF] text-[#FFFFFF] border-none md:px-12 px-6 py-3 rounded-sm">All</button>
+                <button onclick="filterIssues('open', event)" class="tab-btn font-semibold bg-[#FFFFFF] text-[#64748B] border-[#E4E4E7] border md:px-12 px-6 py-3 rounded-sm"> Open </button>
+                <button onclick="filterIssues('closed', event)" class="tab-btn font-semibold bg-[#FFFFFF] text-[#64748B] border-[#E4E4E7] border md:px-12 px-6 py-3 rounded-sm">Closed</button>
             </div>
 
             <div id="loader" class="hidden text-center py-10 font-bold">Loading...</div>
 
-            <div class="flex gap-4 mb-6 border-none shadow-md rounded-lg bg-[#FFFFFF] p-6 justify-between">
+            <div class="grid-cols-1 md:flex gap-4 mb-6 border-none shadow-md rounded-lg bg-[#FFFFFF] p-6 justify-between">
                 <div class="flex gap-4">
-                    <img class="rounded-full border-12 border-[#ECE4FF]" src="./assets/Aperture.png" alt="">
+                    <img class="rounded-full md:border-12 border-6 border-[#ECE4FF] md:w-auto md:h-auto w-9 h-9" src="./assets/Aperture.png" alt="">
                     <div>
                         <h2 class="text-xl font-bold"><span id="issue-count">0</span> Issues</h2>
                         <p class="text-gray-500 text-sm">Track and manage your project issues</p>
                     </div>
                 </div>
-                <div class="flex gap-2">
+                <div class="flex gap-2 justify-between md:justify-center">
                     <div class="flex items-center text-center gap-1">
                         <span class="text-[#00A96E] text-5xl font-bold text-center">•</span>
                         <p class="">Open</p>
