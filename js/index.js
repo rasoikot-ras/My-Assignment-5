@@ -102,25 +102,37 @@ const showModal = (issue) => {
 
     const modal = document.createElement('div');
     modal.id = 'issue-modal';
-    modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4';
+    modal.className = 'fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 backdrop-blur-sm';
     
     modal.innerHTML = `
-        <div class="bg-white rounded-xl w-full max-w-lg p-8 shadow-2xl relative">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-gray-800">${issue.title}</h2>
-                <button onclick="this.closest('#issue-modal').remove()" class="text-gray-400 hover:text-red-500 text-2xl font-bold">&times;</button>
+        <div class="bg-white rounded-xl w-full max-w-xl md:p-8 shadow-2xl relative my-auto">
+            <h2 class="text-lg md:text-2xl font-bold text-[#1F2937] mb-2 leading-tight">${issue.title}</h2>
+            
+            <div class="flex flex-wrap items-center gap-2 mb-4 text-[12px] md:text-[13px]">
+                <span class="bg-[#00A96E] text-white px-3 py-0.5 rounded-full text-[10px] font-bold uppercase">${issue.status}</span>
+                <span class="text-[#64748B] text-[11px] md:text-[13px]">• Opened by ${issue.author} • 22/02/2026</span>
             </div>
+            
             <div class="flex gap-2 mb-4">
-                <span class="bg-green-100 text-green-600 text-[10px] font-bold px-2 py-1 rounded capitalize">● ${issue.status}</span>
-                <span class="bg-orange-100 text-orange-600 text-[10px] font-bold px-2 py-1 rounded capitalize">● ${issue.priority}</span>
+                <span class="bg-[#FFEDED] text-[#FF4D4F] text-[9px] md:text-[10px] font-bold px-2 py-1 rounded"><i class="fa-solid fa-bug"></i> BUG</span>
+                <span class="bg-[#FFF7E6] text-[#FAAD14] text-[9px] md:text-[10px] font-bold px-2 py-1 rounded"><i class="fa-solid fa-circle-info"></i> HELP WANTED</span>
             </div>
-            <p class="text-gray-500 text-sm mb-6 leading-relaxed">${issue.description}</p>
-            <div class="border-t pt-4 flex justify-between items-center">
+
+            <p class="text-[#64748B] text-xs md:text-sm mb-6 leading-relaxed">${issue.description}</p>
+
+            <div class="bg-[#F8FAFC] rounded-lg p-4 md:p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <div>
-                    <p class="text-[11px] text-gray-400">Assignee</p>
-                    <p class="text-sm font-bold text-gray-800">${issue.author}</p>
+                    <p class="text-[10px] text-[#64748B] mb-1 font-medium">Assignee:</p>
+                    <p class="font-bold text-[#1F2937] text-sm md:text-base">${issue.author}</p>
                 </div>
-                <button onclick="this.closest('#issue-modal').remove()" class="bg-[#4A00FF] text-white px-6 py-2 rounded-lg text-sm font-bold">Close</button>
+                <div class="text-right">
+                    <p class="text-[11px] text-[#64748B] mb-1 font-medium">Priority:</p>
+                    <span class="bg-[#FF4D4F] text-white px-4 py-1 rounded-full text-[10px] font-bold uppercase">${issue.priority}</span>
+                </div>
+            </div>
+
+            <div class="flex justify-end">
+                <button onclick="this.closest('#issue-modal').remove()" class="bg-[#4A00FF] text-white px-8 py-2.5 rounded-lg text-sm font-bold hover:bg-[#3b00cc] transition-colors">Close</button>
             </div>
         </div>
     `;
@@ -151,7 +163,29 @@ const filterIssues = (status, event) => {
         });
 };
 
+const handleSearch = () => {
+    const text = searchInput.value.trim();
+    if (!text) {
+        loadAllIssues();
+        return;
+    }
 
+    manageSpinner(true);
+    
+    fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${text}`)
+        .then(res => res.json())
+        .then(data => {
+            const searchResult = Array.isArray(data) ? data : (data.data || []);
+            
+            issueCountDisplay.innerText = searchResult.length;
+            displayIssues(searchResult);
+            manageSpinner(false);
+        })
+        .catch(err => {
+            console.error("error", err);
+            manageSpinner(false);
+        });
+};
 
 function handleLogin() {
     const user = document.getElementById('username').value;
